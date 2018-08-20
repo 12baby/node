@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="wrap">
+        <div class="header">
+            <span class="bg">教学素材</span>
+            <span>教学素材</span>
+            <span>教学素材</span>
+        </div>
+        <div class="section">
+            <%data.forEach(function (file){ %>
+             <dl>
+                <dt><img src="<%=file.img%>"></dt>
+                <dd>
+                    <h4><%=file.title%></h4>
+                    <p><%=file.txt%></p>
+                </dd>
+            </dl>
+            <%})%>
+            
+        </div>
+        <button class="loadBtn">点击加载</button>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script>  
+        document.documentElement.style.fontSize=document.documentElement.clientWidth/375*50+'px';
+        var page = 1;
+        $('.loadBtn').on('click',function () {
+            page++;
+            $.ajax({
+                url:'/show',
+                type: 'post',
+                data: {limit:5, page: page},
+                success: function (data) {
+                   if (data.code === 0) {
+                        data.result.forEach(function (file) {
+                            $('.section').append($('<dl><dt><img src="'+file.img+'"/></dt><dd><h4>'+ file.title +'</h4><p>'+file.txt+'</p></dd></dl>'))
+                        });
+                   }else {
+                       alert(data.msg)
+                   }
+                }
+            })
+        });
+    </script>
+</body>
+</html>
